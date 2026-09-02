@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - Business Casual Demo</title>
+    <style>
+        /* CSS resets and base typography */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            color: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 50/50 Split Layout: Left Panel for Image */
+        .image-panel {
+            flex: 1; 
+            border-right: 1px solid #e5e5e5;
+            background-color: #eaeaea; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .image-panel img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; 
+            display: block;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+        }
+
+        /* 50/50 Split Layout: Right Panel for Spreadsheet & Download */
+        .data-panel {
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f7f7f7;
+            padding: 40px;
+        }
+
+        /* Container for the spreadsheet viewer */
+        .app-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 650px;
+            height: 80vh;
+            padding: 30px;
+            border: 1px solid #e5e5e5;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        /* Spreadsheet Table Wrapper */
+        .table-container {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #e5e5e5;
+            border-radius: 2px;
+            background-color: #fafafa;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        th {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #eaeaea;
+        }
+
+        /* Download Section */
+        .download-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .download-info {
+            font-size: 0.9rem;
+            color: #555555;
+        }
+
+        /* Button / Download Link Styling */
+        .download-btn {
+            padding: 10px 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid #1a1a1a;
+            border-radius: 2px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .download-btn:hover {
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left side: Annotated Image -->
+    <div class="image-panel">
+        <img src="pinpoint sat annotated.png" alt="Annotated satellite view of residential addresses">
+    </div>
+
+    <!-- Right side: Spreadsheet Viewer & Download -->
+    <div class="data-panel">
+        <div class="app-container">
+            <h1>Dataset Viewer</h1>
+            
+            <!-- Spreadsheet Table Container -->
+            <div class="table-container">
+                <table id="csvTable">
+                    <thead>
+                        <tr id="tableHeader"></tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data rows will be loaded dynamically via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Download Action Area -->
+            <div class="download-section">
+                <span class="download-info">Export raw dataset</span>
+                <a href="Residents.csv" download="Residents.csv" class="download-btn">Download CSV</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple CSV parser to dynamically load and display 'Residents.csv' in the table viewer
+        async function loadCSV() {
+            try {
+                const response = await fetch('Residents.csv');
+                const data = await response.text();
+                const rows = data.split('\n').map(row => row.split(','));
+                
+                const headerRow = document.getElementById('tableHeader');
+                const tableBody = document.getElementById('tableBody');
+
+                if (rows.length > 0) {
+                    // Populate Headers
+                    const headers = rows[0];
+                    headers.forEach(header => {
+                        const th = document.createElement('th');
+                        th.textContent = header.trim();
+                        headerRow.appendChild(th);
+                    });
+
+                    // Populate Data Rows
+                    for (let i = 1; i < rows.length; i++) {
+                        if (!rows[i] || rows[i].length < headers.length) continue;
+                        const tr = document.createElement('tr');
+                        rows[i].forEach(cellData => {
+                            const td = document.createElement('td');
+                            td.textContent = cellData.trim();
+                            tr.appendChild(td);
+                        });
+                        tableBody.appendChild(tr);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading CSV:', error);
+                document.getElementById('tableBody').innerHTML = '<tr><td colspan="100%" style="text-align:center; color:#888;">Unable to load Residents.csv viewer locally. (Ensure file is in the same directory).</td></tr>';
+            }
+        }
+
+        loadCSV();
+    </script>
+
+</body>
+</html>

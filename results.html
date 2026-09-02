@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - Business Casual Demo</title>
+    <style>
+        /* CSS resets and base typography */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            color: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 50/50 Split Layout: Left Panel for Image */
+        .image-panel {
+            flex: 1; 
+            border-right: 1px solid #e5e5e5;
+            background-color: #eaeaea; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .image-panel img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; 
+            display: block;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+        }
+
+        /* 50/50 Split Layout: Right Panel for Spreadsheet & Download */
+        .data-panel {
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f7f7f7;
+            padding: 40px;
+        }
+
+        /* Container for the spreadsheet viewer */
+        .app-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 650px;
+            height: 80vh;
+            padding: 30px;
+            border: 1px solid #e5e5e5;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        /* Spreadsheet Table Wrapper */
+        .table-container {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #e5e5e5;
+            border-radius: 2px;
+            background-color: #fafafa;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        th {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #eaeaea;
+        }
+
+        /* Download Section */
+        .download-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .download-info {
+            font-size: 0.9rem;
+            color: #555555;
+        }
+
+        /* Button / Download Link Styling */
+        .download-btn {
+            padding: 10px 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid #1a1a1a;
+            border-radius: 2px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .download-btn:hover {
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left side: Annotated Image -->
+    <div class="image-panel">
+        <img src="pinpoint sat annotated.png" alt="Annotated satellite view of residential addresses">
+    </div>
+
+    <!-- Right side: Spreadsheet Viewer & Download -->
+    <div class="data-panel">
+        <div class="app-container">
+            <h1>Dataset Viewer</h1>
+            
+            <!-- Spreadsheet Table Container -->
+            <div class="table-container">
+                <table id="csvTable">
+                    <thead>
+                        <tr id="tableHeader"></tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data rows will be loaded dynamically via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Download Action Area -->
+            <div class="download-section">
+                <span class="download-info">Export raw dataset</span>
+                <!-- Keeps the download link pointing to the local file for users who want to save it -->
+                <a href="Residents.csv" download="Residents.csv" class="download-btn">Download CSV</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Full embedded dataset to bypass local file CORS restrictions
+        const csvData = `Address,DM Name,Ownership,Occupation,Window,Confidence
+1313 S Oakland St,George Thompson,Tenant,"Senior Vice President and Senior Partner, General Manager at FleishmanHillard",4,90%
+3501 13th St S,Taylor Kelly,Owner,Attorney at U.S. Department of Health and Human Services,4,90%
+3722 13th ST S,Nichelle Fuatupe Allen,Owner,,5,0%
+3804 13th St S,Olli Fosu,Owner,Systems Engineer at US Airforce,4,90%
+3809 13th ST S,Karolina Upton,,N/A,5,
+3825 13th St S,Nicole Robinson,,Technician,1,
+3909 13th St S,Ashley Williams,,Administrative Assistant,2,
+3913 13th St S,Andrew Brooks,,Mechanic,3,
+3921 13th St S,Jason Turner,,Software Developer,3,
+3500 14th St S,Thomas Garcia,,Engineer,3,
+3505 14th St S,Michael Turner,,Insurance Agent,3,
+3600 14th St S,Robert Davis,,Business Analyst,1,
+3621 14th St S,Daniel Edwards,,Teacher,1,
+3703 14th St S,Christopher Parker,,Engineer,1,
+3707 14th St S,Michael Graham,,Nurse,3,
+3717 14th St S,Thomas Anderson,,Electrician,1,
+3725 14th St S,David Bennett,,Insurance Agent,2,
+3811 14th St S,Lauren Anderson,,Carpenter,2,
+3815 14th St S,Joseph Anderson,,Sales Representative,1,
+3823 14th St S,Ryan Jackson,,Paralegal,2,
+3906 14th St S,Megan Miller,,Technician,3,
+3922 14th St S,Jessica Lewis,,Carpenter,2,
+3512 16th St S,Ashley Kelly,,Veterinary Technician,2,
+3522 16th St S,John Robinson,,Marketing Coordinator,2,
+3613 16th St S,Christopher Henderson,,Nurse,2,
+3621 16th St S,Elizabeth Parker,,Teacher,2,
+3627 16th St S,James Harris,,Engineer,2,
+3701 16th St S,James Bennett,,Business Analyst,1,
+3711 16th St S,Thomas Reed,,Software Developer,3,
+3723 16th St S,Nicole Williams,,Administrative Assistant,1,
+3806 16th St S,Lauren Parker,,Marketing Coordinator,2,
+3812 16th St S,Thomas Taylor,,Project Manager,3,
+3904 16th St S,Ashley Mitchell,,Sales Representative,2,
+3923 16th St S,Matthew Garcia,,Business Analyst,3,
+1301 S Quincy St,Jason Thompson,,Marketing Coordinator,1,
+1309 S Quincy St,Rachel Mitchell,,Software Developer,2,
+1317 S Quincy St,Kevin Turner,,Architect,1,
+1404 S Quincy St,Sarah Walker,,Accountant,3,
+1412 S Quincy St,Brian Henderson,,Software Developer,1,
+1501 S Quincy St,Matthew Nelson,,Dental Assistant,3,
+1310 S Pollard St,Hannah Davis,,Marketing Coordinator,3,
+1314 S Pollard St,Ashley Henderson,,Real Estate Agent,1,
+1323 S Pollard St,Hannah Brooks,,Paralegal,2,
+1327 S Pollard St,Kevin Johnson,,Truck Driver,3,
+1415 S Pollard St,Thomas Miller,,Truck Driver,1,
+1612 S Pollard St,James Davis,,Carpenter,3,
+1309 S Oakland St,William Mitchell,,Paralegal,2,
+1503 S Oakland St,Kevin Walker,,Paralegal,3,
+1507 S Oakland St,Ryan Walker,,Business Analyst,1,
+1512 S Oakland St,Katherine Wilson,,IT Specialist,3,
+1615 S Oakland St,Kevin Edwards,,Architect,1,
+1300 S Nelson St,Robert Thompson,,Sales Representative,2,
+1312 S Nelson St,Thomas Graham,,Marketing Coordinator,1,
+1409 S Nelson St,Daniel Henderson,,Software Developer,1,
+1417 S Nelson St,Lauren Walker,,Truck Driver,3,
+1500 S Nelson St,Stephanie Henderson,,Software Developer,2,
+1505 S Nelson St,Kevin Young,,Bank Teller,3,
+1508 S Nelson St,Christopher Nelson,,Accountant,1,
+1620 S Nelson St,David Robinson,,Construction Manager,2,
+1309 S Monroe St,James Kelly,,Bank Teller,1,`;
+
+        function loadEmbeddedCSV() {
+            // Basic CSV parser acknowledging quotes for the occupation field
+            const rows = [];
+            let inQuotes = false;
+            let currentField = '';
+            let currentRow = [];
+            
+            for (let i = 0; i < csvData.length; i++) {
+                const char = csvData[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    currentRow.push(currentField);
+                    currentField = '';
+                } else if (char === '\n' && !inQuotes) {
+                    currentRow.push(currentField);
+                    rows.push(currentRow);
+                    currentRow = [];
+                    currentField = '';
+                } else {
+                    currentField += char;
+                }
+            }
+            if (currentField || currentRow.length > 0) {
+                currentRow.push(currentField);
+                rows.push(currentRow);
+            }
+
+            const headerRow = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+
+            if (rows.length > 0) {
+                // Populate Headers
+                const headers = rows[0];
+                headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header.trim();
+                    headerRow.appendChild(th);
+                });
+
+                // Populate Data Rows
+                for (let i = 1; i < rows.length; i++) {
+                    if (!rows[i] || rows[i].length < headers.length) continue;
+                    const tr = document.createElement('tr');
+                    rows[i].forEach(cellData => {
+                        const td = document.createElement('td');
+                        td.textContent = cellData.trim();
+                        tr.appendChild(td);
+                    });
+                    tableBody.appendChild(tr);
+                }
+            }
+        }
+
+        loadEmbeddedCSV();
+    </script>
+
+</body>
+</html>

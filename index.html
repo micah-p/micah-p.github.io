@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in to your Verizon business account</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #F5F0E8;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1A1A1A;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 80px;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 430px;
+  }
+
+  .card {
+    background: #FFFFFF;
+    border-radius: 22px;
+    padding: 32px 32px 44px;
+  }
+
+  .back-arrow {
+    font-size: 30px;
+    color: #4A4A4A;
+    margin-bottom: 30px;
+    display: inline-block;
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  h1.title {
+    color: #CD040B;
+    font-size: 42px;
+    font-weight: 500;
+    margin: 0 0 18px;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-size: 21px;
+    margin: 0 0 40px;
+    color: #1A1A1A;
+  }
+
+  label.field-label {
+    display: block;
+    font-size: 15px;
+    color: #1A1A1A;
+    margin-bottom: 10px;
+  }
+
+  .user-id-value {
+    font-size: 30px;
+    font-weight: 800;
+    margin: 0 0 34px;
+  }
+
+  label.field-label.password-label {
+    font-weight: 600;
+    font-size: 17px;
+  }
+
+  input[type="password"] {
+    width: 100%;
+    padding: 16px 16px;
+    font-size: 17px;
+    border: 1.5px solid #A6A6A6;
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;
+    background: #fff;
+  }
+
+  input[type="password"]:focus {
+    border-color: #000;
+  }
+
+  a.text-link {
+    color: #1A1A1A;
+    text-decoration: underline;
+    font-size: 20px;
+    display: block;
+    margin: 26px 0 30px;
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 30px;
+  }
+
+  .checkbox-row input[type="checkbox"] {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    border: 1.5px solid #767676;
+    appearance: none;
+    -webkit-appearance: none;
+    background: #fff;
+    cursor: pointer;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .checkbox-row label {
+    font-size: 20px;
+    color: #1A1A1A;
+    cursor: pointer;
+  }
+
+  button.continue-btn {
+    width: 100%;
+    padding: 18px;
+    font-size: 19px;
+    font-weight: 700;
+    border: none;
+    border-radius: 32px;
+    background: #D6D6D6;
+    color: #FFFFFF;
+    cursor: not-allowed;
+    font-family: inherit;
+  }
+
+  button.continue-btn.active {
+    background: #0066FF; /* Changed to blue */
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <a href="#" class="back-arrow">&#8592;</a>
+
+      <h1 class="title">Log in</h1>
+      <p class="subtitle">to your Verizon business account</p>
+
+      <label class="field-label">User ID</label>
+      <p class="user-id-value">MicPatCr1</p>
+
+      <label class="field-label password-label" for="password">Password</label>
+      <input type="password" id="password" name="password" autocomplete="current-password">
+
+      <a href="#" class="text-link">I forgot my password</a>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="default-method">
+        <label for="default-method">Make this as my default log in method.</label>
+      </div>
+
+      <button type="button" class="continue-btn">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    const passwordInput = document.getElementById('password');
+    const continueBtn = document.querySelector('.continue-btn');
+
+    // Listen for typing in the password field
+    passwordInput.addEventListener('input', () => {
+      if (passwordInput.value.length > 0) {
+        continueBtn.classList.add('active');
+      } else {
+        continueBtn.classList.remove('active');
+      }
+    });
+
+    // Handle the button click
+    continueBtn.addEventListener('click', () => {
+      if (continueBtn.classList.contains('active')) {
+        window.location.href = 'analyze.html';
+      }
+    });
+  </script>
+</body>
+</html>

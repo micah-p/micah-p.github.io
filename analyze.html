@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyze Image - Business Casual Demo</title>
+    <style>
+        /* CSS resets and base typography */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            color: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 50/50 Split Layout */
+        .image-panel {
+            flex: 1; 
+            border-right: 1px solid #e5e5e5;
+            background-color: #eaeaea; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .image-panel img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; 
+            display: block;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+        }
+
+        .control-panel {
+            flex: 1; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f7f7f7;
+        }
+
+        /* Container for the interface */
+        .app-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 400px; 
+            padding: 40px;
+            border: 1px solid #e5e5e5;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        /* Button styling */
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            border: 1px solid #1a1a1a;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Loading Overlay Styling (Matched to Page 1) */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(247, 247, 247, 0.9);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-box {
+            background-color: #ffffff;
+            padding: 40px 80px;
+            border: 1px solid #1a1a1a;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left side: Image -->
+    <div class="image-panel">
+        <img src="pinpoint sat.png" alt="Satellite view of selected residential addresses">
+    </div>
+
+    <!-- Right side: Controls -->
+    <div class="control-panel">
+        <div class="app-container">
+            <h1>Analyze</h1>
+            <button onclick="executeAnalysis()">Run</button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <div class="loading-box">
+            Loading
+        </div>
+    </div>
+
+    <script>
+        function executeAnalysis() {
+            // 1. Show the loading overlay
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            // 2. Wait for 2 minutes (120,000 milliseconds), then redirect to the results page
+            setTimeout(function() {
+                // Ensure your third page file is named exactly 'results.html' and is in the same folder
+                window.location.href = 'results.html'; 
+            }, 12000);
+        }
+    </script>
+
+</body>
+</html>
