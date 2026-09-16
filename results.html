@@ -75,7 +75,8 @@
         /* Spreadsheet Table Wrapper */
         .table-container {
             flex: 1;
-            overflow-y: auto;
+            /* Changed to auto to support both horizontal and vertical scrolling */
+            overflow: auto; 
             border: 1px solid #e5e5e5;
             border-radius: 2px;
             background-color: #fafafa;
@@ -87,6 +88,8 @@
             border-collapse: collapse;
             text-align: left;
             font-size: 0.85rem;
+            /* Prevents text wrapping in tight mobile views */
+            white-space: nowrap; 
         }
 
         th, td {
@@ -145,6 +148,46 @@
         .download-btn:hover {
             background-color: #ffffff;
             color: #1a1a1a;
+        }
+
+        /* --- MOBILE OPTIMIZATION (Media Queries) --- */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                overflow: visible;
+            }
+
+            .image-panel {
+                border-right: none;
+                border-bottom: 1px solid #e5e5e5;
+                padding: 16px;
+                min-height: 35vh; /* Provides adequate space for the image on mobile */
+            }
+
+            .data-panel {
+                padding: 16px;
+            }
+
+            .app-container {
+                height: 60vh; /* Keeps the table scrollable rather than stretching the whole page */
+                padding: 16px;
+            }
+            
+            th, td {
+                padding: 10px 12px; /* Slightly tighter padding for mobile tables */
+            }
+
+            h1 {
+                font-size: 1.15rem;
+            }
+            
+            .download-section {
+                flex-direction: column;
+                gap: 12px;
+                align-items: stretch;
+                text-align: center;
+            }
         }
     </style>
 </head>
