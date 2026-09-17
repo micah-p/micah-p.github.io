@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Stasis Solutions — Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050505;
+    --panel: #0e0f0e;
+    --border: #1f231f;
+    --white: #f5f6f5;
+    --muted: #83897f;
+    --green: #35e07a;
+    --green-dim: #1f7a45;
+    --focus: #35e07a;
+    --radius: 6px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100%;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px 18px;
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(53,224,122,0.05), transparent 40%),
+      radial-gradient(circle at 85% 95%, rgba(53,224,122,0.04), transparent 45%);
+  }
+
+  .card {
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .brand {
+    text-align: center;
+    margin-bottom: 34px;
+  }
+
+  .prompt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--green-dim);
+    letter-spacing: 0.02em;
+    margin: 0 0 10px;
+  }
+
+  .prompt::before { content: "$ "; color: var(--green); }
+
+  .headline {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: clamp(24px, 6vw, 32px);
+    line-height: 1.3;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .headline .stasis { color: var(--white); }
+  .headline .solutions { color: var(--green); }
+
+  .cursor {
+    display: inline-block;
+    width: 0.55ch;
+    background: var(--green);
+    margin-left: 2px;
+    animation: blink 1.1s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .tagline {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 10px 0 0;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 22px;
+  }
+
+  .panel-heading {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .field input {
+    width: 100%;
+    background: #0a0b0a;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--white);
+    padding: 13px 14px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.15s ease;
+  }
+
+  .field input::placeholder { color: #4a504a; }
+
+  .field input:focus {
+    outline: none;
+    border-color: var(--focus);
+  }
+
+  .field-error {
+    font-size: 12px;
+    color: #ff8f87;
+    margin-top: 6px;
+    display: none;
+  }
+
+  .field.invalid input { border-color: #ff5f56; }
+  .field.invalid .field-error { display: block; }
+
+  .row-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: -4px 0 20px;
+    font-size: 13px;
+  }
+
+  .remember {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--muted);
+  }
+
+  .remember input {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--green);
+  }
+
+  .forgot {
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .forgot:hover, .forgot:focus-visible {
+    color: var(--green);
+    border-bottom-color: var(--green-dim);
+  }
+
+  button {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.05s ease, opacity 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:active { transform: scale(0.99); }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: #06170c;
+    margin-bottom: 12px;
+  }
+
+  .btn-primary:hover:not(:disabled) { opacity: 0.9; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    border-color: var(--border);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--green-dim);
+    color: var(--green);
+  }
+
+  button:focus-visible,
+  .field input:focus-visible,
+  .forgot:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 18px;
+    color: #3c413c;
+    font-size: 12px;
+  }
+
+  .divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .footnote {
+    text-align: center;
+    font-size: 12.5px;
+    color: #4a504a;
+    margin-top: 20px;
+  }
+
+  .hidden { display: none; }
+
+  .message {
+    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    border: 1px solid transparent;
+  }
+
+  .message.error {
+    background: rgba(255, 95, 86, 0.08);
+    border-color: rgba(255, 95, 86, 0.35);
+    color: #ff8f87;
+  }
+
+  .message.success {
+    background: rgba(53, 224, 122, 0.08);
+    border-color: rgba(53, 224, 122, 0.35);
+    color: var(--green);
+  }
+
+  .disclosure {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #4a504a;
+    text-align: center;
+    margin-top: 22px;
+    line-height: 1.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+  }
+
+  @media (max-width: 360px) {
+    .panel { padding: 22px 16px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="brand">
+      <p class="prompt">stasis-solutions --auth</p>
+      <h1 class="headline">
+        Welcome to<br>
+        <span class="stasis">Stasis</span> <span class="solutions">Solutions</span><span class="cursor">&nbsp;</span>
+      </h1>
+      <p class="tagline">Sign in to pick up where you left off.</p>
+    </div>
+
+    <div class="panel">
+
+      <div id="login-view">
+        <div id="login-message"></div>
+        <form id="login-form" novalidate>
+          <div class="field" id="login-email-field">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" name="email" placeholder="you@company.com" autocomplete="email">
+            <p class="field-error">Enter your email.</p>
+          </div>
+          <div class="field" id="login-password-field">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" placeholder="••••••••" autocomplete="current-password">
+            <p class="field-error">Enter your password.</p>
+          </div>
+
+          <div class="row-between">
+            <label class="remember">
+              <input type="checkbox" name="remember" id="login-remember" checked>
+              Remember me
+            </label>
+            <button type="button" class="forgot" id="forgot-link">Forgot password?</button>
+          </div>
+
+          <button type="submit" class="btn-primary">Log in</button>
+          <button type="button" class="btn-secondary" id="show-signup">Create account</button>
+        </form>
+
+        <div class="divider">or</div>
+
+        <p class="footnote">New to Stasis Solutions? Creating an account takes about a minute.</p>
+      </div>
+
+      <div id="signup-view" class="hidden">
+        <p class="panel-heading">Create your account</p>
+        <div id="signup-message"></div>
+        <form id="signup-form" novalidate>
+          <div class="field" id="signup-name-field">
+            <label for="signup-name">Name</label>
+            <input type="text" id="signup-name" name="name" placeholder="Ada Lovelace" autocomplete="name">
+            <p class="field-error">Enter your name.</p>
+          </div>
+          <div class="field" id="signup-email-field">
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" name="email" placeholder="you@company.com" autocomplete="email">
+            <p class="field-error">Enter a valid email.</p>
+          </div>
+          <div class="field" id="signup-password-field">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" name="password" placeholder="At least 6 characters" autocomplete="new-password">
+            <p class="field-error">Password must be at least 6 characters.</p>
+          </div>
+          <div class="field" id="signup-confirm-field">
+            <label for="signup-confirm">Confirm password</label>
+            <input type="password" id="signup-confirm" name="confirm" placeholder="••••••••" autocomplete="new-password">
+            <p class="field-error">Passwords don't match.</p>
+          </div>
+
+          <button type="submit" class="btn-primary">Create account</button>
+          <button type="button" class="btn-secondary" id="show-login">Back to log in</button>
+        </form>
+      </div>
+
+    </div>
+
+    <p class="disclosure"># demo auth — accounts are stored only in this browser</p>
+  </div>
+
+<script>
+(function () {
+  const USERS_KEY = 'stasisUsers';
+  const SESSION_KEY = 'stasisSession';
+
+  // ---------- storage helpers ----------
+
+  function getUsers() {
+    try {
+      return JSON.parse(localStorage.getItem(USERS_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveUsers(users) {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  }
+
+  function getSession() {
+    try {
+      return JSON.parse(localStorage.getItem(SESSION_KEY))
+        || JSON.parse(sessionStorage.getItem(SESSION_KEY));
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setSession(email, remember) {
+    const payload = JSON.stringify({ email: email, loggedInAt: Date.now() });
+    localStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_KEY);
+    if (remember) {
+      localStorage.setItem(SESSION_KEY, payload);
+    } else {
+      sessionStorage.setItem(SESSION_KEY, payload);
+    }
+  }
+
+  // ---------- password hashing (SHA-256 + per-user salt) ----------
+  // Note: this runs entirely in the browser and is only meant to avoid
+  // storing plaintext passwords in localStorage. It is NOT secure against
+  // anyone with access to this browser's devtools/storage, and there is
+  // no real server validating anything. Fine for a demo with nothing of
+  // real value behind the login — not a substitute for real auth.
+
+  function bufferToHex(buffer) {
+    return Array.from(new Uint8Array(buffer))
+      .map(function (b) { return b.toString(16).padStart(2, '0'); })
+      .join('');
+  }
+
+  function generateSalt() {
+    const arr = new Uint8Array(16);
+    crypto.getRandomValues(arr);
+    return bufferToHex(arr);
+  }
+
+  async function hashPassword(password, salt) {
+    const enc = new TextEncoder();
+    const data = enc.encode(salt + ':' + password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return bufferToHex(hashBuffer);
+  }
+
+  // ---------- UI helpers ----------
+
+  function showMessage(containerId, text, type) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = '<div class="message ' + type + '">' + text + '</div>';
+  }
+
+  function clearMessage(containerId) {
+    document.getElementById(containerId).innerHTML = '';
+  }
+
+  function setFieldInvalid(fieldId, invalid) {
+    document.getElementById(fieldId).classList.toggle('invalid', invalid);
+  }
+
+  function switchTo(view) {
+    document.getElementById('login-view').classList.toggle('hidden', view !== 'login');
+    document.getElementById('signup-view').classList.toggle('hidden', view !== 'signup');
+    clearMessage('login-message');
+    clearMessage('signup-message');
+  }
+
+  // ---------- redirect if already signed in ----------
+
+  if (getSession()) {
+    window.location.href = 'dashboard.html';
+    return;
+  }
+
+  // ---------- view toggling ----------
+
+  document.getElementById('show-signup').addEventListener('click', function () {
+    switchTo('signup');
+  });
+
+  document.getElementById('show-login').addEventListener('click', function () {
+    switchTo('login');
+  });
+
+  document.getElementById('forgot-link').addEventListener('click', function () {
+    showMessage(
+      'login-message',
+      'This demo has no email delivery, so passwords can\u2019t be reset automatically. Clear this browser\u2019s storage to start over.',
+      'error'
+    );
+  });
+
+  // ---------- login ----------
+
+  document.getElementById('login-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    clearMessage('login-message');
+
+    const emailInput = document.getElementById('login-email');
+    const passwordInput = document.getElementById('login-password');
+    const email = emailInput.value.trim().toLowerCase();
+    const password = passwordInput.value;
+    const remember = document.getElementById('login-remember').checked;
+
+    setFieldInvalid('login-email-field', !email);
+    setFieldInvalid('login-password-field', !password);
+    if (!email || !password) return;
+
+    const submitBtn = e.target.querySelector('.btn-primary');
+    submitBtn.disabled = true;
+
+    try {
+      const users = getUsers();
+      const user = users[email];
+
+      if (!user) {
+        showMessage('login-message', 'No account found with that email.', 'error');
+        return;
+      }
+
+      const hash = await hashPassword(password, user.salt);
+      if (hash !== user.hash) {
+        showMessage('login-message', 'Incorrect password.', 'error');
+        return;
+      }
+
+      setSession(email, remember);
+      window.location.href = 'dashboard.html';
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  // ---------- signup ----------
+
+  document.getElementById('signup-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    clearMessage('signup-message');
+
+    const nameInput = document.getElementById('signup-name');
+    const emailInput = document.getElementById('signup-email');
+    const passwordInput = document.getElementById('signup-password');
+    const confirmInput = document.getElementById('signup-confirm');
+
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim().toLowerCase();
+    const password = passwordInput.value;
+    const confirm = confirmInput.value;
+
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const passwordValid = password.length >= 6;
+    const confirmValid = password === confirm && confirm.length > 0;
+
+    setFieldInvalid('signup-name-field', !name);
+    setFieldInvalid('signup-email-field', !emailValid);
+    setFieldInvalid('signup-password-field', !passwordValid);
+    setFieldInvalid('signup-confirm-field', !confirmValid);
+
+    if (!name || !emailValid || !passwordValid || !confirmValid) return;
+
+    const submitBtn = e.target.querySelector('.btn-primary');
+    submitBtn.disabled = true;
+
+    try {
+      const users = getUsers();
+
+      if (users[email]) {
+        showMessage('signup-message', 'An account with that email already exists.', 'error');
+        return;
+      }
+
+      const salt = generateSalt();
+      const hash = await hashPassword(password, salt);
+
+      users[email] = { name: name, salt: salt, hash: hash, createdAt: Date.now() };
+      saveUsers(users);
+      setSession(email, true);
+      window.location.href = 'dashboard.html';
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  // clear inline field errors as the person types
+  document.querySelectorAll('.field input').forEach(function (input) {
+    input.addEventListener('input', function () {
+      input.closest('.field').classList.remove('invalid');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
