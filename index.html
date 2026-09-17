@@ -465,7 +465,7 @@
   // ---------- redirect if already signed in ----------
 
   if (getSession()) {
-    window.location.href = 'dashboard.html';
+    window.location.href = 'homepage.html';
     return;
   }
 
@@ -522,7 +522,7 @@
       }
 
       setSession(email, remember);
-      window.location.href = 'dashboard.html';
+      window.location.href = 'homepage.html';
     } finally {
       submitBtn.disabled = false;
     }
@@ -572,7 +572,7 @@
       users[email] = { name: name, salt: salt, hash: hash, createdAt: Date.now() };
       saveUsers(users);
       setSession(email, true);
-      window.location.href = 'dashboard.html';
+      window.location.href = 'homepage.html';
     } finally {
       submitBtn.disabled = false;
     }
